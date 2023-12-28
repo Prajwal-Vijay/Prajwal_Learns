@@ -9,4 +9,5 @@ int main(){
     while(cases > 0){
         cases--;
         int n;
+        cin >> n;
         

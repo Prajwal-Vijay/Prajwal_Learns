@@ -1,0 +1,66 @@
+optimization - choosing the best option from a set of options.
+local search - search algorithms that maintain a single node and searches by moving to a neighbouring node.
+Consider the example of a place with many houses, we want to place hospitals in locations such that the
+distance from these houses to the hospitals is minimum.
+In such problems each location/state has a value, and the function aka objective function is used to to find 
+global maximum/minimum.
+There is a current state, we examine the values of the neighbouring states, if the value in the adjacent state
+is higher then we move over to that state, while finding the max, and vice versa for min.
+algorithm - 
+function HILL-CLIMB(problems):
+    current = initial state of problem
+    repeat:
+        neighbour = highest valued neighbour of current.
+        if neighbour not better than current:
+            sol found
+this approach still gets stuck at local extremas, but thats also a good thing, because when there are 
+many possible states, finding local extrema quickly, is much better than taking alot of time and getting global extrema
+
+Hill Climbing Variants:
+Variant 		    Definition
+steepest-ascent		choose the highest valued neighbour among n neighbours
+stochastic          choose randomly from the higher valued neighbours
+first-choice        choose the first higher-valued neighbour
+random-restart      conduct hill climbing multiple times
+local beam search   chooses the k highest-valued neighbours
+
+Sometimes you would like to get away from the local extrema, and atleast increase the probability of finding
+global extrema.
+
+Simulated Annealing - Sometimes, you need to make the wrong move, to reach a global extrema.
+In the beginning the whole system is in an higher temperature state(where it would be more likely to choose the wrong step), 
+later on as time progresses, it goes to a lower temperature where it only chooses that state which is better than itself.
+
+function SIMULATED-ANNEALING(problem, max):
+    current = initial state of problem
+    for t = 1 to max:
+        T = TEMPERATURE(t)
+        neighbour = random neighbor of current
+        delta E = how much better neighbor is than current
+        if delta E > 0:
+            current = neighbour
+            with probability e^(del E/ T) set current = neighbor
+        return current
+
+Such problems are useful in city planning.
+Travelling Salesman problem:
+Bunch of cities are given, task is to minimize the distance and return where you started from.
+This is an extremely computational problem, (NP-complete (No known efficient way to solve))
+Only approximations can be made.
+Simply switch the edges and find better neighbours.
+Linear Programming Type -
+minimize the cost - c1*x1 + c2*x2 ....
+with constraints of the form a1*x1 + a2*x2 + .... <= b
+or of the form a1 * x1 + a2*x2 + ... = b
+with bounds for each variable li <= xi <= ui
+
+eg: Two machines X1 and X2. X1 costs $50/hour to run, X2 costs $80/hour to run.
+Goal is to minimize cost. => 50*X1 + 80*X2
+X1 requires 5 units of labor per hour. X2 requires 2 units of labor per hour.
+Total of 20 units of labor to spend. => 5*X1 + 2*X2 <= 20
+X1 produces 10 units of output per hour. X2 produces 12 units of output per hour.
+Company needs 90 units of output. => 10* X1 + X2 * 12 >= 90
+Linear Programming algorithms:
+i) Simplex
+ii) Interior Point
+

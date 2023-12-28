@@ -1,0 +1,104 @@
+    def add_knowledge(self, cell, count):
+        """
+        Called when the Minesweeper board tells us, for a given
+        safe cell, how many neighboring cells have mines in them.
+
+        This function should:
+            1) mark the cell as a move that has been made
+            2) mark the cell as safe
+            3) add a new sentence to the AI's knowledge base
+               based on the value of `cell` and `count`
+            4) mark any additional cells as safe or as mines
+               if it can be concluded based on the AI's knowledge base
+            5) add any new sentences to the AI's knowledge base
+               if they can be inferred from existing knowledge
+        """
+        #1
+        self.moves_made.add(cell)
+        #2
+        self.mark_safe(cell)
+        #3
+        (curr_x,curr_y) = cell
+        cells = set()
+        for x in range(curr_x-1,curr_x+2):
+            for y in range(curr_y-1,curr_y+2):
+                if(0 <= x < self.width and 0 <= y < self.height):
+                    if((x,y) == cell):
+                        continue
+                    if((x,y) in self.moves_made):
+                        continue
+                    
+                    cells.add((x,y))
+        #4
+        currSen = Sentence(cells,count)
+        mines = set(currSen.known_mines())
+        safes = set(currSen.known_safes())
+        for cell in mines:
+            self.mark_mine(cell)
+        for cell in safes:
+            self.mark_safe(cell)
+        self.knowledge.append(currSen)
+        know = list(self.knowledge)
+        for sentence in know: 
+            mines = set(sentence.known_mines())
+            safes = set(sentence.known_safes())
+            for cell in mines:
+                self.mark_mine(cell)
+            for cell in safes:
+                self.mark_safe(cell)
+            #5 Creating New Knowledge
+            newSen = None
+            if (currSen.cells < sentence.cells) and (currSen.count < sentence.count):
+                newSen = Sentence(sentence.cells-currSen.cells,sentence.count-currSen.count)
+                #To prevent the Duplication of sentences
+                if(newSen in self.knowledge):
+                    continue
+                
+                #Everytime a new sentence is being added we check for any conclusions that can be derived
+                mines = set(newSen.known_mines())
+                safes = set(newSen.known_safes())
+                for cell in mines:
+                    self.mark_mine(cell)
+                for cell in safes:
+                    self.mark_safe(cell)
+                self.knowledge.append(newSen)
+                
+            elif (sentence.cells < currSen.cells) and (currSen.count > sentence.count):
+                newSen = Sentence(currSen.cells-sentence.cells,currSen.count-sentence.count)
+                if(newSen in self.knowledge):
+                    continue
+                mines = set(newSen.known_mines())
+                safes = set(newSen.known_safes())
+                for cell in mines:
+                    self.mark_mine(cell)
+                for cell in safes:
+                    self.mark_safe(cell)
+                self.knowledge.append(newSen)
+            # Looping over all the sentences again to create new knowledge
+            for sentence_2 in know:
+                newSen_2 = None
+                if len(sentence_2.cells) == 0:
+                    continue
+                if (sentence_2.cells < sentence.cells) and (sentence_2.count <= sentence.count):
+                    newSen_2 = Sentence(sentence.cells-sentence_2.cells,sentence.count-sentence_2.count)
+                    if(newSen_2 in self.knowledge):
+                        continue
+                    mines = set(newSen_2.known_mines())
+                    safes = set(newSen_2.known_safes())
+                    for cell in mines:
+                        self.mark_mine(cell)
+                    for cell in safes:
+                        self.mark_safe(cell)
+                    self.knowledge.append(newSen_2)
+                elif (sentence_2.cells > sentence.cells) and (sentence.count <= sentence_2.count):
+                    newSen_2 = Sentence(sentence_2.cells-sentence.cells,sentence_2.count-sentence.count)
+                    if(newSen_2 in self.knowledge):
+                        continue
+                    mines = set(newSen_2.known_mines())
+                    safes = set(newSen_2.known_safes())
+                    for cell in mines:
+                        self.mark_mine(cell)
+                    for cell in safes:
+                        self.mark_safe(cell)
+                    self.knowledge.append(newSen_2)
+        

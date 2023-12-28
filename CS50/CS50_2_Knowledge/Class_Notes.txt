@@ -1,0 +1,127 @@
+Propositional symbols - Any symbol which can be true or false.
+Game of Clue:
+People     | Rooms       |Weapons
+Mustard    |ballroom     |knife
+plum       |Kitchen      |revolver
+scarlet    |library      |wrench
+
+A person from poeple kills someone in one of the rooms using one of the weapons, 
+the goal is to use clues(represented as statements) and find the right answer.
+((mustard v plum v scarlet)
+^ (ballroom v kitchen v library)
+^ (knife v revolver v wrench) ^
+!plum ^
+!(mustard ^ library ^ revolver)) => An example for the knowledge bank
+
+The algorithm used for this is called model checking. For this all the possible models need to be checked, if the query is always true when knowledge is true
+i.e, does the knowledge entail the query.
+(a model is a combination of all Propositional symbols having true or false)
+
+python code -
+def model_check(knowledge, query):
+    def help_check(knowledge, query, symbols, model):
+        if not symbols:
+            if knowledge.evaluate(model): #evaluates the statements using the data from model
+                return query.evaluate(model)
+            return True
+        else:
+            remaining = symbols.copy()
+            p = remaining.pop()
+            model_true = model.copy()
+            model_true[p] = True
+            model_false = model.copy()
+            model_false[p] = False
+
+            return (help_check(knowledge, query, remaining, model_true) and 
+                    help_check(knowledge, query, remaining, model_false))
+    symbols = set.union(knowledge.symbols(), query.symbols())
+    return help_check(knowledge, query, symbols, dict())
+
+Mastermind Game - 
+four colors red, blue, green and yellow -> in some order
+the goal is to find the correct order of colors.
+Model checking is a bit slow in this.
+So a different algorithm that suits this usecase is needed.
+Inference rules -
+. Modus Ponens - 
+if a -> b
+and a 
+then b (conclusion)
+but this is different from model checking where each model is checked and then seen if it matches b.
+
+. And Elimination -
+a and b
+then a (conclusion)
+
+. Double negation Elimination - 
+!(!a) 
+then a (conclusion)
+
+. Implication Elimination -
+a -> b
+then !a or b (conclusion)
+
+. Biconditional Elimination - 
+a <-> b
+then (a -> b) and (b -> a) (conclusion)
+
+. DeMorgans Law - 
+!(a and b)
+then (!a or !b) (conclusion)
+!(a or b)
+then (!a and !b) (conclusion)
+
+. Distributive Law - 
+(a and (b or c))
+then ((a and b) or (a and c)) (conclusion)
+
+Theorem Proving -
+initial state - starting knowledge base
+actions - inference rules
+transition model - new knowledge base after inference
+goal test - check statement we are trying to prove
+path cost function - number of steps in proof
+
+. Union resolution rule -
+P v Q and !P 
+then Q (conclusion)
+
+Also, P v A1 v A2 v A3 ..
+and !P v B1 v B2 v B3 ..
+then A1 v A2 v A3 .. v B1 v B2 v B3 ..
+
+Clause:
+a disjunction(connected with or) of literals.
+eg. P v Q v R
+
+conjunctive normal form:
+logical sentence that is a conjunction of clauses.
+eg. (AvBvC) ^ (Dv!E) ^ (FvG)
+Every logical expression can be converted into this normal form, so it is easy to reduce by resolution
+rule.
+ 
+Conversion to CNF(same as mathematical reasoning chapter of jee):
+for Biconditionals: ((a <-> b) => (a -> b) ^ (b -> a))
+for Implications: ((a -> b) => (!a v b))
+for ! move them in using DeMorgans Laws
+
+Inference By resolution:
+To determine if KB |= a:
+    Check if (KB ^ ~a) is a contradiction(always false for any combination)
+    if so then KB |= a
+    otherwise no entailment
+
+    For this convert (KB ^ ~a) to conjunctive normal form
+    and try to resolve it to using union resolution rule, 
+    if ever the empty(False) clause is produced, it is a contradiction and hence, KB entails a.
+
+First Order Logic:
+Sometimes when using Propositional logic, the symbols may be redundant, 
+i.e use similar names again and again.
+Constant symbols    Predicate symbols
+Like names          kind of operations or functions on the constant symbols.
+eg: Person(Minerva) -> Minerva is a Person
+    !House(Minerva) -> Minerva not a House
+    PredicateSymbol(ConstantSymbol)
+Universal Quantification -> Something which is true for all the variables x, denoted by (for each symbol)
+Existential Quantification -> Something which is true for some variables x. (reverse E symbol)

@@ -1,0 +1,50 @@
+Many times there is going to be uncertainty with some event.
+Eg. Rover on Mars
+    Weather Prediction
+Usually the events are represented by omega(ω), so P(ω) means probability of the event ω.
+    In Games based on chance
+    Some Axioms:
+    . 0 =< P(ω) =< 1
+    . SIGMA P(ω) = 1
+    
+    Unconditional Probability - Degree of belief in a proposition in the absence of any other evidence.
+    eg. probability that the sum of numbers on the roll of two dice.
+    Conditional Probability - Degree of belief in a proposition given some evidence that has been revealed.
+                              Notation - P(a|b), probability of a given b is true.
+    Eg. P(rain today| rain yesterday)
+        P(route change| traffic conditions)
+        P(disease| test results)
+        P(A|B)*P(B) = P(A^B) = P(B|A)*P(A)
+        
+    A random variable in probability theory is a variable that can take on a whole range of values from a set
+    Eg. Random variable Weather = {Sun, Rain, Snow, Cloud, Wind}
+    A probability distribution would take a random variable and assigns a probability for each of the events.
+    Eg. Random Variable Flight = {On Time, Delayed, Cancelled}
+        P(Flight) = <0.6,0.3,0.1> (Vectorial Notation)
+
+    Independence - Knowing the probability of one event does not affect the probability of the other event.
+    Eg. Roll of two dice, the outcome of first die has no influence on the second one.
+    The rule followed for two independent events a and b 
+    P(a^b) = P(a)*P(b|a) = P(a)*P(b)(since occurence of a has not effect on b)
+
+    Bayes Rule:
+        P(b|a) = P(a|b)*P(b)/P(a)
+
+    JOINT Probability Distribution:
+
+          | R = rain | R = !rain
+C = cloud | 0.08     | 0.32
+C = !cloud| 0.02     | 0.58
+
+Some RULES ->
+Negation Rule: P(!a) = 1 - P(a)
+Inclusion-Exclusion: P(a v b) = p(a) + p(b) - p(a ^ b)
+Marginalization: P(a) = P(a and b) + P(a and !b), in other words, P(x) = SIGMA(y varies) P(x and y)
+
+Bayesian Network:
+Data structure that represents the dependecies among random variables.
+. Directed Graph
+. Each node represents a random variable
+. arrow from X to Y means X is a parent of Y
+. Each node X has a probability distribution P(X|Parents(X))
+

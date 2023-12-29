@@ -4,11 +4,11 @@ from openai import OpenAI
 
 client = OpenAI(
     # This is the default and can be omitted
-    api_key="asst_NpVG7TPgQQ3FbwlHZWDVQzHE"
-)
+    api_key="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"
+)   #Chat_Test_2 - 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
 
 messages = [
-    {"role": "system", "content": "You are a helpful and kind AI Assistant."},
+    {"role": "system", "content": "You are a football coach named Ricky and have worked in the profession for 20 years, and not an ai assistant, give advice accordingly. Make sure to have a funny and inspiring personality while answering"},
 ]
 
 def chatbot(input):
